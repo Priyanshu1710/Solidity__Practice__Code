@@ -1,28 +1,47 @@
 pragma solidity ^0.5.11;
 
-// Create Token , purchase token , burn token and send token
+// Inheritance in Tokenization file after using modifier
 
-contract InheritanceModifierExample {
-    mapping(address => uint256) public tokenBalance;
+contract Owned {
     address owner;
-    uint256 tokenPrice = 1 ether;
 
     constructor() public {
         owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "You are not allowed");
+        _;
+    }
+}
+
+contract InheritanceModifierExample is Owned {
+    mapping(address => uint256) public tokenBalance;
+    // address owner;
+    uint256 tokenPrice = 1 ether;
+
+    constructor() public {
+        // owner = msg.sender;
         tokenBalance[owner] = 100;
     }
 
-    function createNewToken() public {
-        require(msg.sender == owner, "You are not allowed");
+    // Adding Modifier
+    // modifier onlyOwner {
+    // require(msg.sender == owner, "You are not allowed");
+    // _;
+    // }
+
+    function createNewToken() public onlyOwner {
+        // require(msg.sender == owner, "You are not allowed");
         tokenBalance[owner]++;
     }
 
     function burnToken() public {
-        require(msg.sender == owner, "You are not allowed");
+        // require(msg.sender == owner, "You are not allowed");
         tokenBalance[owner]--;
     }
 
-    function purchaseToken() public payable {
+    function purchaseToken() public payable onlyOwner {
         require(
             (tokenBalance[owner] * tokenPrice) / msg.value > 0,
             "not enough tokens"

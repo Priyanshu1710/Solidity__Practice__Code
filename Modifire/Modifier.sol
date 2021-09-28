@@ -1,6 +1,6 @@
 pragma solidity ^0.5.11;
 
-// Create Token , purchase token , burn token and send token
+//Tokenization using  Modifier
 
 contract InheritanceModifierExample {
     mapping(address => uint256) public tokenBalance;
@@ -12,13 +12,19 @@ contract InheritanceModifierExample {
         tokenBalance[owner] = 100;
     }
 
-    function createNewToken() public {
+    // Adding Modifier
+    modifier onlyOwner() {
         require(msg.sender == owner, "You are not allowed");
+        _; // must use this symbol
+    }
+
+    function createNewToken() public onlyOwner {
+        // require(msg.sender == owner, "You are not allowed");
         tokenBalance[owner]++;
     }
 
-    function burnToken() public {
-        require(msg.sender == owner, "You are not allowed");
+    function burnToken() public onlyOwner {
+        // require(msg.sender == owner, "You are not allowed");
         tokenBalance[owner]--;
     }
 
